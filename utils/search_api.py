@@ -17,7 +17,7 @@ def search_serpapi(query, num_results=5):
     results = search.get_dict()
     return results.get("organic_results", [])
 
-def search_arxiv(query, max_results=5):
+def search_arxiv(query, max_results=3):
     search = arxiv.Search(
         query=query,
         max_results=max_results,
@@ -33,3 +33,5 @@ def search_arxiv(query, max_results=5):
             "published": str(result.published.date())
         })
     return papers
+
+
