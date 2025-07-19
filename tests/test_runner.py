@@ -1,12 +1,25 @@
 # test_runner.py
-from dotenv import load_dotenv
-from src.graph.runner import run_graph
 
-load_dotenv()
+from src.graph import build_graph
 
-initial_state = {"query": "The impact of climate change on marine biodiversity"}
+graph = build_graph()
 
-final_state = run_graph(initial_state)
+initial_state = {
+    "topic": "Effects of remote work on employee productivity",
+    "subtopics": [
+        "benefits of remote work",
+        "challenges in productivity",
+        "hybrid models impact"
+    ]
+}
 
-print("Final report:\n")
-print(final_state.get("report", "No report generated."))
+result = graph.invoke(initial_state)
+
+print("------FINAL OUTPUT------")
+print("Extracted Texts:")
+for t in result["texts"]:
+    print(t[:300], "\n---\n")  # print first 300 chars
+
+print("\nCitations:")
+for c in result["citations"]:
+    print("-", c)

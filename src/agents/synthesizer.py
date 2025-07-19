@@ -32,6 +32,10 @@ chain = prompt | client
 def synthesizer(state: Dict) -> Dict:
     subtopics = state.get("subtopics", [])
     documents = state.get("documents", [])
+    citations = state.get("citations", [])
+
+    # Ensure documents are all strings
+    documents = [doc if isinstance(doc, str) else str(doc) for doc in documents]
 
     # Join documents with two newlines
     docs_text = "\n\n".join(documents[:5])  # limit to first 5 docs
@@ -44,5 +48,9 @@ def synthesizer(state: Dict) -> Dict:
 
     response = chain.invoke(inputs)
     report = response.content.strip()
+    print("Citations after synthesizer:", state.get("citations"))
+    if not citations:
+        citations = ["No citations available."]
 
-    return {**state, "report": report}
+    return {**state, "report": report, "citations": citations}
+
