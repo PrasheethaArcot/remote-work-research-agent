@@ -7,7 +7,19 @@
 
 # 🧠 Research Agent
 
-A modular, automated research assistant that fetches documents, synthesizes information, and generates structured reports with citations — all from a single research query.
+Research Agent is a modular, automated research assistant built with LangGraph, LangChain, and LLMs. Given a single research query, it executes a complete multi-step pipeline:
+
+- Plans the Research Scope: Breaks down the main query into relevant subtopics using an LLM-powered planner.
+
+- Gathers Documents: Searches academic and web sources (e.g., arXiv, news, blogs) to retrieve high-quality, relevant documents.
+
+- Processes and Filters Content: Parses retrieved content, extracts key text from summaries or full PDFs, and filters noise.
+
+- Synthesizes a Report: Generates a structured, human-readable research report across all subtopics using LLM synthesis.
+
+- Handles Citations Automatically: Formats both raw citation metadata and readable references for inclusion in the report or UI.
+
+- Modular & Extensible: Each step (planning, search, processing, synthesis, citation) is a standalone LangGraph node — easily extendable or swappable.
 
 ---
 
