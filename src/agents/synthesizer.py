@@ -1,10 +1,8 @@
-# src/agents/synthesizer.py
 import os
 from dotenv import load_dotenv
 from typing import Dict
 from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate
-from src.utils.citation import cite_web_article, cite_arxiv_paper
 
 load_dotenv()
 
@@ -35,28 +33,16 @@ def synthesizer(state: Dict) -> Dict:
     documents = state.get("documents", [])  
     citations = state.get("citations", [])
 
-    print(f"Received {len(documents)} processed texts")
-    print(f"Received {len(citations)} citations:")
-    for i, citation in enumerate(citations):
-        print(f"  {i+1}. {citation}")
-
     # Join document texts
-    if documents:
+    if documents and isinstance(documents[0], dict):
         docs_text = "\n\n".join(doc.get("text", "") for doc in documents[:5])
-        print(f"Using processed texts: {len(docs_text)} characters")
     else:
-        original_docs = state.get("results", []) or state.get("raw_documents", [])
-        docs_text = "\n\n".join(doc.get("summary", "") for doc in original_docs[:5])
-        print(f"Fallback to summaries: {len(docs_text)} characters")
+        docs_text = "\n\n".join(str(doc) for doc in documents[:5])
 
-    # Prepare prompt input
     inputs = {
         "subtopics": subtopics,
         "documents": docs_text
     }
-
-    print("DEBUG: web_results =", state.get("web_results"))
-    print("DEBUG: academic_results =", state.get("academic_results"))
 
     response = chain.invoke(inputs)
     report = response.content.strip()
@@ -64,22 +50,23 @@ def synthesizer(state: Dict) -> Dict:
     # Format citations into markdown
     def format_citation(c):
         authors = ", ".join(c.get("authors", []))
-        return f"{c.get('title', 'Untitled')} ({c.get('published', 'n.d.')}) - {authors}. [PDF]({c.get('pdf_url', '#')})"
+        title = c.get("title", "Untitled")
+        published = c.get("published", "n.d.")
+        pdf_url = c.get("pdf_url", "")
+        if pdf_url:
+            return f"{title} ({published}) - {authors}. [PDF]({pdf_url})"
+        else:
+            return f"{title} ({published}) - {authors}"
 
-    citation_lines = [format_citation(c) for c in citations]
-
-    if citation_lines:
-        citation_text = "\n\n📚 Citations:\n" + "\n".join(f"- {line}" for line in citation_lines)
-        print(f"Adding {len(citation_lines)} citations to report")
+    if citations:
+        citation_text = "\n\n📚 Citations:\n" + "\n".join(f"- {format_citation(c)}" for c in citations)
     else:
         citation_text = "\n\n📚 Citations:\n- No citations available."
-        print("No valid citations found")
 
     report_with_citations = report + citation_text
 
     return {
         **state,
         "report": report_with_citations,
-        "citations": citations,             
-        "citation_lines": citation_lines    
+        "citations": citations,
     }
