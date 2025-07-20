@@ -119,6 +119,3 @@ streamlit run src/ui/streamlit_app.py
 
 ---
 
-## 📬 Contact
-
-For issues or contributions, feel free to open a PR or contact the maintainer.
