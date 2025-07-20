@@ -6,7 +6,6 @@ from src.agents.synthesizer import synthesizer
 from src.agents.document_processor import document_processor
 from src.agents.report_generator import report_generator
 from src.agents.information_gatherer import gather_information
-import logging
 
 # Register node functions
 def plan_node(state: ResearchState) -> ResearchState:
@@ -23,16 +22,15 @@ def gather_info_node(state: ResearchState) -> ResearchState:
     return gather_information(state)
 
 
-
 def document_processor_node(state: ResearchState) -> ResearchState:
-    results = state.get("results", [])
-    logging.debug(f"document_processor_node input results: {results}")  # <- Add this
+    results = state.get("results", []) or state.get("documents", [])
+    print(f"Processing {len(results)} results...")
+    for i, doc in enumerate(results[:3]):  
+        print(f"Doc {i}: keys = {list(doc.keys())}")
     texts, citations = document_processor(results)
-    logging.debug(f"document_processor output citations: {citations}")  # <- And this
     state["documents"] = texts
     state["citations"] = citations
     return state
-
 
 
 def report_generator_node(state: ResearchState) -> ResearchState:
