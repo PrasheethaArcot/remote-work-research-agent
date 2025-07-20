@@ -1,3 +1,10 @@
+<img width="1281" height="854" alt="Screenshot 2025-07-20 at 11 39 55 AM" src="https://github.com/user-attachments/assets/6173a6cc-1cb7-4a30-9b54-01915473fb59" />
+
+
+<img width="1160" height="684" alt="Screenshot 2025-07-20 at 12 48 45 PM" src="https://github.com/user-attachments/assets/4950aa83-038d-4975-bca8-7ba006914471" />
+
+
+
 # 🧠 Research Agent
 
 A modular, automated research assistant that fetches documents, synthesizes information, and generates structured reports with citations — all from a single research query.
