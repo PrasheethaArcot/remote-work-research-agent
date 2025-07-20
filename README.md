@@ -11,7 +11,7 @@ Research Agent is a modular, automated research assistant built with LangGraph, 
 
 - Plans the Research Scope: Breaks down the main query into relevant subtopics using an LLM-powered planner.
 
-- Gathers Documents: Searches academic and web sources (e.g., arXiv, news, blogs) to retrieve high-quality, relevant documents.
+- Gathers Documents: Searches academic and web sources to retrieve high-quality, relevant documents.
 
 - Processes and Filters Content: Parses retrieved content, extracts key text from summaries or full PDFs, and filters noise.
 
