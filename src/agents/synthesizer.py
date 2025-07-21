@@ -11,10 +11,48 @@ client = ChatGroq(
     model="llama3-70b-8192" 
 )
 
+# prompt = ChatPromptTemplate.from_messages([
+#     ("system", "You are a research assistant who writes structured summaries based on documents and subtopics."),
+#     ("human", """
+# Using the following documents, write a structured research summary covering these subtopics:
+
+# Subtopics:
+# {subtopics}
+
+# Documents:
+# {documents}
+
+# Be concise, but cover all major points. Format with headings.
+# """)
+# ])
+# prompt = ChatPromptTemplate.from_messages([
+#     ("system", "You are a research assistant who writes detailed, structured, and clear summaries based on documents and subtopics."),
+#     ("human", """
+# Using the following documents, write a structured research summary covering these subtopics:
+
+# Subtopics:
+# {subtopics}
+
+# Documents:
+# {documents}
+
+# For each subtopic:
+# - Write a detailed paragraph explaining key points.
+# - Include background, methods, findings, and implications if applicable.
+# - Use examples or statistics where relevant.
+# - Cite sources if citation info is provided.
+# - Avoid unnecessary repetition, but do not be overly brief.
+# - Use markdown headings for each subtopic.
+
+# """)
+# ])
 prompt = ChatPromptTemplate.from_messages([
-    ("system", "You are a research assistant who writes structured summaries based on documents and subtopics."),
+    ("system", "You are a research assistant skilled at synthesizing complex information into clear, accurate, and well-structured research summaries."),
     ("human", """
-Using the following documents, write a structured research summary covering these subtopics:
+You are given a list of subtopics and a set of documents containing relevant information.
+
+Task:
+Write a comprehensive, structured research summary that covers each of the following subtopics in detail:
 
 Subtopics:
 {subtopics}
@@ -22,9 +60,22 @@ Subtopics:
 Documents:
 {documents}
 
-Be concise, but cover all major points. Format with headings.
+Instructions for each subtopic:
+- Use markdown heading level 2 (i.e., '## Subtopic Name') for the subtopic title.
+- Provide at least one detailed paragraph explaining the key concepts, background, methods, findings, and implications.
+- When relevant, include specific examples, data points, or statistics extracted from the documents.
+- Clearly explain any technical terms or jargon for a broad audience.
+- Cite the sources by referencing document titles or URLs when specific information is included.
+- Maintain a formal and objective tone.
+- Avoid unnecessary repetition, but ensure completeness and clarity.
+- Organize the summary logically, making it easy to follow.
+
+Deliver the summary in markdown format, ready for inclusion in a report.
+
 """)
 ])
+
+
 
 chain = prompt | client
 
@@ -54,7 +105,7 @@ def synthesizer(state: Dict) -> Dict:
         published = c.get("published", "n.d.")
         pdf_url = c.get("pdf_url", "")
         if pdf_url:
-            return f"{title} ({published}) - {authors}. [PDF]({pdf_url})"
+            return f"{title} ({published}) - {authors}. [Link]({pdf_url})"
         else:
             return f"{title} ({published}) - {authors}"
 

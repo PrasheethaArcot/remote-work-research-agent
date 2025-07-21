@@ -12,9 +12,7 @@ def plan_node(state: ResearchState) -> ResearchState:
     print("Running plan_node")
     return research_planner(state)
 
-def synthesize_node(state: ResearchState) -> ResearchState:
-    print("Running synthesize_node")
-    return synthesizer(state)
+
 
 
 def gather_info_node(state: ResearchState) -> ResearchState:
@@ -32,6 +30,10 @@ def document_processor_node(state: ResearchState) -> ResearchState:
     state["citations"] = citations
     return state
 
+def synthesize_node(state: ResearchState) -> ResearchState:
+    print("Running synthesize_node")
+    return synthesizer(state)
+
 
 def report_generator_node(state: ResearchState) -> ResearchState:
     print("Running report_generator_node")
@@ -39,4 +41,4 @@ def report_generator_node(state: ResearchState) -> ResearchState:
 
 
 
-# Optional: add more wrappers later like gather_info, process_docs
+

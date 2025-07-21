@@ -1,37 +1,58 @@
 # utils/search_apis.py
 import os
 from dotenv import load_dotenv
-from serpapi import GoogleSearch
 import arxiv
+from tavily import TavilyClient
+load_dotenv()
+
+
 
 load_dotenv()
 
-def search_serpapi(query, num_results=5):
-    params = {
-        "q": query,
-        "engine": "google",
-        "api_key": os.getenv("SERPAPI_API_KEY"),
-        "num": num_results
-    }
-    search = GoogleSearch(params)
-    results = search.get_dict()
-    return results.get("organic_results", [])
+client = TavilyClient(api_key=os.getenv("TAVILY_API_KEY"))
+
+# search_tavily
+def search_tavily(query, num_results=5):
+    results = client.search(query=query, max_results=num_results)
+    output = []
+
+    for r in results.get("results", []):
+        output.append({
+            "title": r.get("title", ""),
+            "text": r.get("content", ""),      
+            "pdf_url": r.get("url", ""),       
+            "authors": [],                      
+            "published": "",                    
+            "source_type": "web"
+        })
+
+    return output
+# search_arxiv
+import arxiv
 
 def search_arxiv(query, max_results=3):
+    client = arxiv.Client()
+
     search = arxiv.Search(
         query=query,
         max_results=max_results,
         sort_by=arxiv.SortCriterion.Relevance
     )
+
+    search_results = client.results(search)
+
     papers = []
-    for result in search.results():
+    for result in search_results:
         papers.append({
             "title": result.title,
-            "summary": result.summary,
-            "authors": [a.name for a in result.authors],
+            "text": result.summary,
             "pdf_url": result.pdf_url,
-            "published": str(result.published.date())
+            "authors": [a.name for a in result.authors],
+            "published": str(result.published.date()),
+            "source_type": "arxiv"
         })
     return papers
+
+
 
 
