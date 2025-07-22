@@ -7,3 +7,4 @@ class ResearchState(TypedDict):
     report: Optional[str]
     processed_texts: List[str]
     citations: List[str]
+    recall_memories: Optional[List[str]] = []

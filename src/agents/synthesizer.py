@@ -69,6 +69,8 @@ Instructions for each subtopic:
 - Maintain a formal and objective tone.
 - Avoid unnecessary repetition, but ensure completeness and clarity.
 - Organize the summary logically, making it easy to follow.
+- At the end, output a single overall confidence score (as a percentage between 0 and 100) based on how well the report is supported by the provided documents. Format the score like this:
+Confidence Score: XX%
 
 Deliver the summary in markdown format, ready for inclusion in a report.
 
@@ -83,6 +85,7 @@ def synthesizer(state: Dict) -> Dict:
     subtopics = state.get("subtopics", [])
     documents = state.get("documents", [])  
     citations = state.get("citations", [])
+    recall_memories = state.get("recall_memories", [])
 
     # Join document texts
     if documents and isinstance(documents[0], dict):
@@ -90,9 +93,11 @@ def synthesizer(state: Dict) -> Dict:
     else:
         docs_text = "\n\n".join(str(doc) for doc in documents[:5])
 
+    recall_text = "\n".join(recall_memories)
+
     inputs = {
         "subtopics": subtopics,
-        "documents": docs_text
+        "documents": docs_text + "\n\n[Recall Memories]\n" + recall_text
     }
 
     response = chain.invoke(inputs)
