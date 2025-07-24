@@ -2,7 +2,7 @@ from src.graph.edges import edges
 from src.graph.state import ResearchState
 from typing import Callable, List, Tuple
 
-def run_graph(initial_state: ResearchState) -> ResearchState:
+def run_graph(initial_state: ResearchState, step_callback: Callable[[str], None] = None) -> ResearchState:
     state = initial_state
     
     # Build adjacency list from edges
@@ -24,6 +24,8 @@ def run_graph(initial_state: ResearchState) -> ResearchState:
         next_nodes = []
         for node in current_nodes:
             try:
+                if step_callback:
+                    step_callback(node.__name__)
                 print(f"Running node: {node.__name__}")
                 state = node(state)
                 print(f"State after {node.__name__}: {state}\n")
