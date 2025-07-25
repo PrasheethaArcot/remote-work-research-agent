@@ -2,6 +2,8 @@ from src.utils.search_api import search_tavily, search_arxiv
 
 def gather_information(state: dict) -> dict:
     query = state.get("query", "")
+    if query == "</think>":
+        query=query.split("</think>")[1]
     subtopics = state.get("subtopics", [])
     all_results = []
 
@@ -13,6 +15,8 @@ def gather_information(state: dict) -> dict:
             search_terms.append(subtopic)
 
     for term in search_terms:
+        if term == "</think>":
+            term=term.split("</think>")[1]
         print(f"Searching for: {term}")
 
         web_results = search_tavily(term, num_results=5)

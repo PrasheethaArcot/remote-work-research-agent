@@ -9,7 +9,7 @@ load_dotenv()
 
 client = ChatGroq(
     api_key=os.getenv("GROQ_API_KEY"),
-    model="llama3-70b-8192"  
+    model="deepseek-r1-distill-llama-70b"  
 )
 
 
@@ -28,10 +28,6 @@ For broad or ambiguous queries, always include:
 - Data, statistics, or performance highlights (if relevant)  
 - Underlying causes, implications, or future directions  
 
-Adapt subtopics to the domain of the query. For example:
-- Sports: match summary, top performers, records  
-- Science: mission goals, participants, discoveries, impact  
-
 Rules:
 - Output only a valid Python list of short string subtopics
 - Do NOT include explanations, markdown, or formatting
@@ -49,8 +45,6 @@ Rules:
 - Do NOT include explanations, markdown, or formatting
 - Do NOT add unrelated or speculative subtopics
 - Stay tightly focused on the core aspects of the original topic
-
-Example: ["Definition and Scope", "Current Trends", "Key Challenges", "Applications", "Future Directions"]
 """)
 ])
 
@@ -62,8 +56,16 @@ chain = prompt | client
 def research_planner(state: Dict) -> Dict:
     query = state["query"]
     response = chain.invoke({"query": query})
-    try:
-        subtopics = eval(response.content)
-    except:
-        subtopics = [response.content]
+    content = response.content
+    # Try to find the first list in the response (between [ and ])
+    start = content.find('[')
+    end = content.rfind(']')
+    if start != -1 and end != -1:
+        list_str = content[start:end+1]
+        try:
+            subtopics = eval(list_str)  # Only eval the list part
+        except:
+            subtopics = [content]  # If eval fails, just use the whole response
+    else:
+        subtopics = [content]  # If no list found, use the whole response
     return {**state, "subtopics": subtopics}

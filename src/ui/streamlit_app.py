@@ -1,6 +1,7 @@
 # src/ui/streamlit_app.py
 import streamlit as st
 from src.graph.runner import run_graph 
+import re
 
 st.title("Research Agent")
 
@@ -23,6 +24,18 @@ if st.button("Run Research"):
             steps_placeholder.markdown("**All steps completed:**\n" + "\n".join([f"- {s}" for s in steps_so_far]))
             report = final_state.get("final_report") or final_state.get("report", "No report generated.")
             citations = final_state.get("citations", [])
+            thinking = final_state.get("thinking", None)
+
+            thinking_block = None
+            if report:
+                match = re.search(r'<think>(.*?)</think>', report, flags=re.DOTALL)
+                if match:
+                    thinking_block = match.group(1).strip()
+                    report = re.sub(r'<think>.*?</think>', '', report, flags=re.DOTALL).strip()
+
+            if thinking_block:
+                with st.expander("Model Thinking"):
+                    st.markdown(thinking_block)
 
             st.markdown(report)
     else:

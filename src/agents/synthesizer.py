@@ -8,74 +8,10 @@ load_dotenv()
 
 client = ChatGroq(
     api_key=os.getenv("GROQ_API_KEY"),
-    model="llama3-70b-8192" 
+    model="deepseek-r1-distill-llama-70b" 
 )
 
-# prompt = ChatPromptTemplate.from_messages([
-#     ("system", "You are a research assistant who writes structured summaries based on documents and subtopics."),
-#     ("human", """
-# Using the following documents, write a structured research summary covering these subtopics:
 
-# Subtopics:
-# {subtopics}
-
-# Documents:
-# {documents}
-
-# Be concise, but cover all major points. Format with headings.
-# """)
-# ])
-# prompt = ChatPromptTemplate.from_messages([
-#     ("system", "You are a research assistant who writes detailed, structured, and clear summaries based on documents and subtopics."),
-#     ("human", """
-# Using the following documents, write a structured research summary covering these subtopics:
-
-# Subtopics:
-# {subtopics}
-
-# Documents:
-# {documents}
-
-# For each subtopic:
-# - Write a detailed paragraph explaining key points.
-# - Include background, methods, findings, and implications if applicable.
-# - Use examples or statistics where relevant.
-# - Cite sources if citation info is provided.
-# - Avoid unnecessary repetition, but do not be overly brief.
-# - Use markdown headings for each subtopic.
-
-# """)
-# ])
-# prompt = ChatPromptTemplate.from_messages([
-#     ("system", "You are a research assistant skilled at synthesizing complex information into clear, accurate, and well-structured research summaries."),
-#     ("human", """
-# You are given a list of subtopics and a set of documents containing relevant information.
-
-# Task:
-# Write a comprehensive, structured research summary that covers each of the following subtopics in detail:
-
-# Subtopics:
-# {subtopics}
-
-# Documents:
-# {documents}
-
-# Instructions for each subtopic:
-# - Use markdown heading level 2 (i.e., '## Subtopic Name') for the subtopic title.
-# - Provide at least one detailed paragraph explaining the key concepts, background, methods, findings, and implications.
-# - When relevant, include specific examples, data points, or statistics extracted from the documents.
-# - Clearly explain any technical terms or jargon for a broad audience.
-# - Cite the sources by referencing document titles or URLs when specific information is included.
-# - Maintain a formal and objective tone.
-# - Avoid unnecessary repetition, but ensure completeness and clarity.
-# - Organize the summary logically, making it easy to follow.
-# - At the end, output a single overall confidence score (as a percentage between 0 and 100) based on how well the report is supported by the provided documents. Format the score like this:
-# Confidence Score: XX%
-
-# Deliver the summary in markdown format, ready for inclusion in a report.
-
-# """)
-# ])
 prompt = ChatPromptTemplate.from_messages([
     ("system", "You are a research assistant skilled at synthesizing complex information into clear, accurate, and well-structured research summaries."),
     ("human", """
@@ -95,7 +31,6 @@ Instructions:
 - When relevant, include specific examples, data points, or statistics from the documents.
 - If a subtopic is only partially covered, clearly state the gap and lower the confidence score accordingly.
 - Clearly explain any technical terms or jargon for a broad audience.
-- Cite sources by referencing document titles or URLs in parentheses, like: (Source: arxiv.org/abs/xxxx.xxxx) or [Document Title](URL).
 - Ignore documents that are irrelevant to the subtopics.
 - Maintain a formal, objective tone. Avoid repetition, but ensure completeness.
 - Organize subtopics logically.
