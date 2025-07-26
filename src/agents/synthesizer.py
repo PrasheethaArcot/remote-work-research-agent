@@ -34,6 +34,7 @@ Instructions:
 - Ignore documents that are irrelevant to the subtopics.
 - Maintain a formal, objective tone. Avoid repetition, but ensure completeness.
 - Organize subtopics logically.
+- Do NOT include <think> or </think> blocks in your response.
 
 At the end of the report, output a **Confidence Score** (as a percentage between 0 and 100), formatted like this:
 
@@ -49,7 +50,6 @@ def synthesizer(state: Dict) -> Dict:
     subtopics = state.get("subtopics", [])
     documents = state.get("documents", [])  
     citations = state.get("citations", [])
-    recall_memories = state.get("recall_memories", [])
 
     # Join document texts
     if documents and isinstance(documents[0], dict):
@@ -57,11 +57,9 @@ def synthesizer(state: Dict) -> Dict:
     else:
         docs_text = "\n\n".join(str(doc) for doc in documents[:5])
 
-    recall_text = "\n".join(recall_memories)
-
     inputs = {
         "subtopics": subtopics,
-        "documents": docs_text + "\n\n[Recall Memories]\n" + recall_text
+        "documents": docs_text
     }
 
     response = chain.invoke(inputs)

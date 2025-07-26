@@ -5,8 +5,7 @@ from src.graph.nodes import (
     gather_info_node,
     document_processor_node,
     synthesize_node,
-    report_generator_node,
-    load_recall_memories
+    report_generator_node
 )
 
 def build_graph():
@@ -18,7 +17,6 @@ def build_graph():
     graph.add_node("document_processor_node", document_processor_node)
     graph.add_node("synthesize_node", synthesize_node)
     graph.add_node("report_generator_node", report_generator_node)
-    graph.add_node("load_recall_memories", load_recall_memories)
 
     # Set entry and finish nodes
     graph.set_entry_point("plan_node")
@@ -26,8 +24,7 @@ def build_graph():
 
     # Define edges (flow of execution)
     graph.add_edge("plan_node", "gather_info_node")
-    graph.add_edge("gather_info_node", "load_recall_memories")
-    graph.add_edge("load_recall_memories", "document_processor_node")
+    graph.add_edge("gather_info_node", "document_processor_node")
     graph.add_edge("document_processor_node", "synthesize_node")
     graph.add_edge("synthesize_node", "report_generator_node")
 
