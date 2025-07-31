@@ -68,17 +68,15 @@ with tab1:
             st.warning("Please enter a research topic.")
 
     # Show current research results if available
-    if st.session_state.get("research_completed", False):
+    elif st.session_state.get("research_completed", False):
         st.markdown("---")
         st.subheader("Research Results")
-        
-        # Show model thinking if available
+
         thinking_block = st.session_state.get("thinking_block")
         if thinking_block:
             with st.expander("Model Thinking"):
                 st.markdown(thinking_block)
 
-        # Show the research summary
         report = st.session_state.get("research_report", "No report available.")
         st.markdown(report)
 
