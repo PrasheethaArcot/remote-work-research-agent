@@ -13,21 +13,31 @@ client = ChatGroq(
 )
 
 prompt = ChatPromptTemplate.from_messages([
-    ("system", """You are a knowledge graph generator. Create a comprehensive JSON with detailed nodes and edges from research content.
-
+    ("system", """You are an expert at creating knowledge graphs from research reports. 
+    
 Create 8-15 nodes and 10-20 edges representing key entities and relationships.
 
-Node format: {{"data": {{"id": "unique_id", "label": "TYPE", "name": "display_name", "description": "detailed_description", "attributes": {{"key1": "value1", "key2": "value2"}}}}}}
-Edge format: {{"data": {{"id": "edge_id", "source": "node_id", "target": "node_id", "label": "RELATIONSHIP", "description": "relationship_description"}}}}
+IMPORTANT: Output ONLY valid JSON in this exact format:
+{{
+  "nodes": [
+    {{"data": {{"id": "unique_id", "label": "TYPE", "name": "display_name", "description":  "Write a full-sentence description of this entity — what it is, its role, and its context"}}}},
+    {{"data": {{"id": "unique_id2", "label": "TYPE2", "name": "display_name2", "description": " "Write a full-sentence description of this entity — what it is, its role, and its context"}}}}
+  ],
+  "edges": [
+    {{"data": {{"id": "edge_id", "source": "node_id", "target": "node_id", "label": "RELATIONSHIP", "description": "Write a detailed sentence explaining the relationship between the two nodes"}}}},
+    {{"data": {{"id": "edge_id2", "source": "node_id2", "target": "node_id3", "label": "RELATIONSHIP2", "description": "Write a detailed sentence explaining the relationship between the two nodes"}}}}
+  ]
+}}
 
 Guidelines:
 - Infer node types and relationships from the research content
-- Create meaningful, descriptive labels for nodes and edges
-- Include relevant attributes for each entity based on the content
+- Use meaningful labels like PERSON, ORGANIZATION, TECHNOLOGY, CONCEPT, EVENT, LOCATION, etc.
 - Extract specific facts, dates, numbers, achievements, and relationships
 - Make relationships logical and meaningful based on the research context
+- Use unique IDs for all nodes and edges
+- Ensure all source and target IDs in edges correspond to actual node IDs
 
-Output ONLY valid JSON, no explanations."""),
+Output ONLY the JSON object, no explanations or additional text."""),
     
     ("human", """
 Research Report:
@@ -39,18 +49,63 @@ Create a comprehensive knowledge graph JSON with detailed nodes and edges. Extra
 
 chain = prompt | client
 
+
+
 def json_generator(state: Dict) -> Dict:
-    """
-    This function takes research results and creates a knowledge graph JSON file.
-    Think of it like taking a research report and turning it into a visual map of ideas.
-    """
+    """Generate a knowledge graph JSON from research results"""
     
-    # Step 1: Get the research report from our data
-    # We look for the report in different possible places in our data
+    # Get the research report
     report = state.get("final_report") or state.get("report", "")
     
-    # Step 2: If we don't have a report, create a simple fallback
+    # If no report, create a simple fallback
     if not report:
+        simple_graph = {
+            "nodes": [
+                {"data": {"id": "query", "label": "QUERY", "name": state.get("query", "Research Query")}}
+            ], 
+            "edges": []
+        }
+        with open("data.json", "w") as f:
+            json.dump(simple_graph, f, indent=2)
+        return {**state, "knowledge_graph": simple_graph}
+    
+    # Try to create a detailed graph using AI
+    try:
+        # Generate knowledge graph using AI
+        ai_response = chain.invoke({"report": report})
+        ai_text = ai_response.content.strip()
+        
+        # Extract JSON from AI response
+        json_start = ai_text.find('{')
+        json_end = ai_text.rfind('}') + 1
+        json_text = ai_text[json_start:json_end] if json_start != -1 else "{}"
+        
+        # Parse JSON with fallback handling
+        try:
+            graph = json.loads(json_text)
+        except json.JSONDecodeError:
+            import re
+            cleaned_text = re.sub(r'^[^{]*', '', json_text)
+            cleaned_text = re.sub(r'}[^}]*$', '}', cleaned_text)
+            try:
+                graph = json.loads(cleaned_text)
+            except json.JSONDecodeError:
+                # Create a simple fallback if JSON parsing fails
+                graph = {
+                    "nodes": [
+                        {"data": {"id": "query", "label": "QUERY", "name": "Research Query", "description": "Main research question"}}
+                    ],
+                    "edges": []
+                }
+        
+        # Save and return the graph
+        with open("data.json", "w") as f:
+            json.dump(graph, f, indent=2)
+        
+        return {**state, "knowledge_graph": graph}
+        
+    # If anything goes wrong, create a simple fallback
+    except Exception:
         # Create a basic graph with just the research question
         simple_graph = {
             "nodes": [
@@ -62,41 +117,3 @@ def json_generator(state: Dict) -> Dict:
         with open("data.json", "w") as f:
             json.dump(simple_graph, f, indent=2)
         return {**state, "knowledge_graph": simple_graph}
-    
-    # Step 3: Try to create a detailed graph using AI
-    try:
-        # Ask the AI to create a knowledge graph from our research
-        ai_response = chain.invoke({"report": report})
-        ai_text = ai_response.content.strip()
-        
-        # Step 4: Extract the JSON that the AI created
-        # Find where the JSON starts and ends in the AI's response
-        json_start = ai_text.find('{')
-        json_end = ai_text.rfind('}') + 1
-        
-        # Get the JSON part of the AI's response
-        json_text = ai_text[json_start:json_end] if json_start != -1 else "{}"
-        
-        # Step 5: Convert the text into actual JSON data
-        graph = json.loads(json_text)
-        
-        # Step 6: Save the graph to a file so we can use it later
-        with open("data.json", "w") as f:
-            json.dump(graph, f, indent=2)
-        
-        # Step 7: Return the graph along with our original data
-        return {**state, "knowledge_graph": graph}
-        
-    # Step 8: If anything goes wrong, create a simple fallback
-    except:
-        # Create a basic graph with just the research question
-        simple_graph = {
-            "nodes": [
-                {"data": {"id": "query", "label": "QUERY", "name": state.get("query", "Research Query")}}
-            ], 
-            "edges": []
-        }
-        # Save this simple graph to a file
-        with open("data.json", "w") as f:
-            json.dump(simple_graph, f, indent=2)
-        return {**state, "knowledge_graph": simple_graph} 
