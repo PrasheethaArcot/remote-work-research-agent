@@ -6,6 +6,7 @@ from src.agents.synthesizer import synthesizer
 from src.agents.document_processor import document_processor
 from src.agents.report_generator import report_generator
 from src.agents.information_gatherer import gather_information
+from src.agents.json_generator import json_generator
 
 # Register node functions
 def plan_node(state: ResearchState) -> ResearchState:
@@ -35,6 +36,10 @@ def synthesize_node(state: ResearchState) -> ResearchState:
 def report_generator_node(state: ResearchState) -> ResearchState:
     print("Running report_generator_node")
     return report_generator(state)
+
+def json_generator_node(state: ResearchState) -> ResearchState:
+    print("Running json_generator_node")
+    return json_generator(state)
 
 
 
