@@ -6,19 +6,12 @@ from src.agents.synthesizer import synthesizer
 from src.agents.document_processor import document_processor
 from src.agents.report_generator import report_generator
 from src.agents.information_gatherer import gather_information
-from src.memory.memory import search_recall_memories
+from src.agents.json_generator import json_generator
 
 # Register node functions
 def plan_node(state: ResearchState) -> ResearchState:
     print("Running plan_node")
     return research_planner(state)
-
-def load_recall_memories(state: ResearchState, config=None) -> ResearchState:
-    query = state.get("query", "") or " ".join(state.get("subtopics", []))
-    recall = search_recall_memories.invoke(query, config or {"configurable": {"user_id": "default"}})
-    state["recall_memories"] = recall
-    return state
-
 
 def gather_info_node(state: ResearchState) -> ResearchState:
     print("Running gather_info_node")
@@ -43,6 +36,10 @@ def synthesize_node(state: ResearchState) -> ResearchState:
 def report_generator_node(state: ResearchState) -> ResearchState:
     print("Running report_generator_node")
     return report_generator(state)
+
+def json_generator_node(state: ResearchState) -> ResearchState:
+    print("Running json_generator_node")
+    return json_generator(state)
 
 
 
