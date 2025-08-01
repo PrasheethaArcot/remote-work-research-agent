@@ -20,12 +20,12 @@ Create 8-15 nodes and 10-20 edges representing key entities and relationships.
 IMPORTANT: Output ONLY valid JSON in this exact format:
 {{
   "nodes": [
-    {{"data": {{"id": "unique_id", "label": "TYPE", "name": "display_name", "description":  "Write a full-sentence description of this entity — what it is, its role, and its context"}}}},
-    {{"data": {{"id": "unique_id2", "label": "TYPE2", "name": "display_name2", "description": " "Write a full-sentence description of this entity — what it is, its role, and its context"}}}}
+    {{"data": {{"id": "unique_id", "label": "TYPE", "name": "display_name", "description": "detailed_description"}}}},
+    {{"data": {{"id": "unique_id2", "label": "TYPE2", "name": "display_name2", "description": "detailed_description2"}}}}
   ],
   "edges": [
-    {{"data": {{"id": "edge_id", "source": "node_id", "target": "node_id", "label": "RELATIONSHIP", "description": "Write a detailed sentence explaining the relationship between the two nodes"}}}},
-    {{"data": {{"id": "edge_id2", "source": "node_id2", "target": "node_id3", "label": "RELATIONSHIP2", "description": "Write a detailed sentence explaining the relationship between the two nodes"}}}}
+    {{"data": {{"id": "edge_id", "source": "node_id", "target": "node_id", "label": "RELATIONSHIP", "description": "relationship_description"}}}},
+    {{"data": {{"id": "edge_id2", "source": "node_id2", "target": "node_id3", "label": "RELATIONSHIP2", "description": "relationship_description2"}}}}
   ]
 }}
 
@@ -69,51 +69,22 @@ def json_generator(state: Dict) -> Dict:
             json.dump(simple_graph, f, indent=2)
         return {**state, "knowledge_graph": simple_graph}
     
-    # Try to create a detailed graph using AI
-    try:
-        # Generate knowledge graph using AI
-        ai_response = chain.invoke({"report": report})
-        ai_text = ai_response.content.strip()
+    # Generate knowledge graph using AI
+    ai_response = chain.invoke({"report": report})
+    ai_text = ai_response.content.strip()
+    
+    # Extract JSON from AI response
+    json_start = ai_text.find('{')
+    json_end = ai_text.rfind('}') + 1
+    json_text = ai_text[json_start:json_end] if json_start != -1 else "{}"
+    
+    # Parse JSON
+    graph = json.loads(json_text)
+    
+    # Save and return the graph
+    with open("data.json", "w") as f:
+        json.dump(graph, f, indent=2)
+    
+    return {**state, "knowledge_graph": graph}
         
-        # Extract JSON from AI response
-        json_start = ai_text.find('{')
-        json_end = ai_text.rfind('}') + 1
-        json_text = ai_text[json_start:json_end] if json_start != -1 else "{}"
-        
-        # Parse JSON with fallback handling
-        try:
-            graph = json.loads(json_text)
-        except json.JSONDecodeError:
-            import re
-            cleaned_text = re.sub(r'^[^{]*', '', json_text)
-            cleaned_text = re.sub(r'}[^}]*$', '}', cleaned_text)
-            try:
-                graph = json.loads(cleaned_text)
-            except json.JSONDecodeError:
-                # Create a simple fallback if JSON parsing fails
-                graph = {
-                    "nodes": [
-                        {"data": {"id": "query", "label": "QUERY", "name": "Research Query", "description": "Main research question"}}
-                    ],
-                    "edges": []
-                }
-        
-        # Save and return the graph
-        with open("data.json", "w") as f:
-            json.dump(graph, f, indent=2)
-        
-        return {**state, "knowledge_graph": graph}
-        
-    # If anything goes wrong, create a simple fallback
-    except Exception:
-        # Create a basic graph with just the research question
-        simple_graph = {
-            "nodes": [
-                {"data": {"id": "query", "label": "QUERY", "name": state.get("query", "Research Query")}}
-            ], 
-            "edges": []
-        }
-        # Save this simple graph to a file
-        with open("data.json", "w") as f:
-            json.dump(simple_graph, f, indent=2)
-        return {**state, "knowledge_graph": simple_graph}
+ 
