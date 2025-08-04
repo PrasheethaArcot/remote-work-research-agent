@@ -1,3 +1,40 @@
+
+# 🧠 Research Agent
+
+Research Agent is a modular, automated research assistant built with LangGraph, LangChain, and LLMs. Given a single research query, it executes a complete multi-step pipeline:
+
+- Plans the Research Scope: Breaks down the main query into relevant subtopics using an LLM-powered planner.
+- Gathers Documents: Searches academic and web sources to retrieve high-quality, relevant documents.
+- Processes and Filters Content: Parses retrieved content, extracts key text from summaries or full PDFs, and filters noise.
+- Synthesizes a Report: Generates a structured, human-readable research report across all subtopics using LLM synthesis.
+- Handles Citations Automatically: Formats both raw citation metadata and readable references for inclusion in the report or UI.
+- Modular & Extensible: Each step (planning, search, processing, synthesis, citation) is a standalone LangGraph node — easily extendable or swappable.
+- A Streamlit-based research tool that uses LangGraph to generate structured reports and visualize entity relationships in an interactive knowledge graph.
+
+
+---
+
+## 🚀 Features
+
+- 🌐 Web & Academic Search: Integrates Google Search and arXiv API to gather relevant research data
+- 📄 Document Parsing: Extracts content from PDFs and text files for deeper analysis
+- 🧠 LLM-Based Synthesis: Uses LLaMA 3 via the Groq API for high-speed, accurate reasoning
+- 📝 Structured Report Generation: Formats research findings into clean, readable markdown
+- 🔗 Citation Generation: Outputs APA-style references for sourced content
+- 🖥️ Interactive Streamlit Interface: Dual-column layout with research summary and knowledge graph
+- 📥 Query Input: Enter any research topic to initiate a new research flow
+- 🤖 LangGraph Execution: Dynamically traverses reasoning steps as a graph pipeline
+- 🔄 Step Tracker: Real-time progress indicator for each step in the graph
+- 🧾 Summary Output: Final report includes refined insights with extracted <think> blocks
+- 🕸️ Knowledge Graph Visualization:
+      Expand/remove nodes on interaction
+      Dynamically styled by label
+      Supports multiple layouts (Dagre, Force, etc.)
+
+---
+
+## 🚀 Description
+
 **This is the initial screen users see after launching the app. The interface is cleanly divided into two sections:
 Left: A text input for entering the research topic and a "Run Research" button.
 Right: A placeholder panel titled "Knowledge Graph" with a message prompting the user to run research first.**
@@ -40,42 +77,6 @@ Each source is rendered in APA-like style with clickable links (e.g., arXiv, ext
 This section highlights the traceability and credibility of the generated research.**
 <img width="1497" height="871" alt="Screenshot 2025-08-04 at 1 37 29 PM" src="https://github.com/user-attachments/assets/e6d5dd93-951d-475f-addc-8a9a31f8013a" />
 
-
-
-
-
-
-# 🧠 Research Agent
-
-Research Agent is a modular, automated research assistant built with LangGraph, LangChain, and LLMs. Given a single research query, it executes a complete multi-step pipeline:
-
-- Plans the Research Scope: Breaks down the main query into relevant subtopics using an LLM-powered planner.
-- Gathers Documents: Searches academic and web sources to retrieve high-quality, relevant documents.
-- Processes and Filters Content: Parses retrieved content, extracts key text from summaries or full PDFs, and filters noise.
-- Synthesizes a Report: Generates a structured, human-readable research report across all subtopics using LLM synthesis.
-- Handles Citations Automatically: Formats both raw citation metadata and readable references for inclusion in the report or UI.
-- Modular & Extensible: Each step (planning, search, processing, synthesis, citation) is a standalone LangGraph node — easily extendable or swappable.
-- A Streamlit-based research tool that uses LangGraph to generate structured reports and visualize entity relationships in an interactive knowledge graph.
-
-
----
-
-## 🚀 Features
-
-- 🌐 Web & Academic Search: Integrates Google Search and arXiv API to gather relevant research data
-- 📄 Document Parsing: Extracts content from PDFs and text files for deeper analysis
-- 🧠 LLM-Based Synthesis: Uses LLaMA 3 via the Groq API for high-speed, accurate reasoning
-- 📝 Structured Report Generation: Formats research findings into clean, readable markdown
-- 🔗 Citation Generation: Outputs APA-style references for sourced content
-- 🖥️ Interactive Streamlit Interface: Dual-column layout with research summary and knowledge graph
-- 📥 Query Input: Enter any research topic to initiate a new research flow
-- 🤖 LangGraph Execution: Dynamically traverses reasoning steps as a graph pipeline
-- 🔄 Step Tracker: Real-time progress indicator for each step in the graph
-- 🧾 Summary Output: Final report includes refined insights with extracted <think> blocks
-- 🕸️ Knowledge Graph Visualization:
-      Expand/remove nodes on interaction
-      Dynamically styled by label
-      Supports multiple layouts (Dagre, Force, etc.)
 
 ---
 
