@@ -33,7 +33,7 @@ Research Agent is a modular, automated research assistant built with LangGraph, 
 
 ---
 
-## 🚀 Description
+## 📄 Description
 
 **This is the initial screen users see after launching the app. The interface is cleanly divided into two sections:
 Left: A text input for entering the research topic and a "Run Research" button.
