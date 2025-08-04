@@ -21,20 +21,18 @@ On the right, an early preview of the knowledge graph begins to render, displayi
 Each node represents a concept, model, application, etc., inferred from the research.**
 <img width="1504" height="848" alt="Screenshot 2025-08-04 at 1 35 03 PM" src="https://github.com/user-attachments/assets/59e5cdab-7fef-46cb-93e0-078e24e8f090" />
 
-**The research pipeline has finished executing all nodes.
-A green success message (“Research completed!”) is shown.
-The final interactive knowledge graph is now fully rendered.
-Users can view the full model thinking and structured summary report below.**
-<img width="782" height="724" alt="Screenshot 2025-08-04 at 1 36 45 PM" src="https://github.com/user-attachments/assets/4b5f66bc-babf-4eff-9104-f670f5224bb2" />
-
 **This image shows a node selected in the graph, revealing a rich side panel.
 Details include the node’s ID, type (e.g., APPLICATION), name, and full description.
 This allows users to inspect semantic relationships and entity descriptions visually and interactively.**
-<img width="783" height="701" alt="Screenshot 2025-08-04 at 1 36 57 PM" src="https://github.com/user-attachments/assets/912c0d5f-141e-4f15-b93a-8e916a7cc3a0" />
+<img width="782" height="724" alt="Screenshot 2025-08-04 at 1 36 45 PM" src="https://github.com/user-attachments/assets/4b5f66bc-babf-4eff-9104-f670f5224bb2" />
 
 **The layout dropdown menu is expanded, allowing users to switch between graph layouts:
 Options include: dagre, grid, circle, concentric, random, breadthfirst, etc.
 Useful for visual clarity when graphs become dense or highly connected.**
+<img width="783" height="701" alt="Screenshot 2025-08-04 at 1 36 57 PM" src="https://github.com/user-attachments/assets/912c0d5f-141e-4f15-b93a-8e916a7cc3a0" />
+
+**The markdown displays the final report of the searched query.
+Users can read, explore, and visually cross-reference the content and the entity graph.**
 <img width="1487" height="807" alt="Screenshot 2025-08-04 at 1 37 15 PM" src="https://github.com/user-attachments/assets/985cb902-8acf-44f5-8687-1b3f4ea87804" />
 
 **At the bottom of the output, the citations are shown with optional confidence scores.
