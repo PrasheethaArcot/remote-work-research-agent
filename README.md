@@ -3,10 +3,12 @@ Left: A text input for entering the research topic and a "Run Research" button.
 Right: A placeholder panel titled "Knowledge Graph" with a message prompting the user to run research first.**
 <img width="1496" height="829" alt="Screenshot 2025-08-04 at 1 33 47 PM" src="https://github.com/user-attachments/assets/d678edde-c8b9-401e-b188-a6611fc6b0e8" />
 
+
 **After entering a query, the system shows a loading spinner (Searching...) and begins executing the research pipeline.
 The left column displays a live “Steps completed” list (e.g., Plan Node, Gather Info Node), showing progress as LangGraph nodes execute.
 The right graph panel remains hidden until research is completed.**
-<img width="1496" height="829" alt="Screenshot 2025-08-04 at 1 33 47 PM" src="https://github.com/user-attachments/assets/cc928f57-09bb-4274-9b69-801b320654a1" />
+<img width="1485" height="819" alt="Screenshot 2025-08-04 at 1 34 37 PM" src="https://github.com/user-attachments/assets/5ccc3beb-2781-40ce-aae9-a3ec418d5915" />
+
 
 **The research pipeline has finished executing all nodes.
 A green success message (“Research completed!”) is shown.
